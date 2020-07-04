@@ -4,7 +4,7 @@
 #version: 1.0.0
 
 chmod -R a+rx *;
-
+num='^[0-9]+$';
 
 banner()
 {
@@ -42,13 +42,10 @@ echo -en "\e[1;36m)\e[0m" "\e[1;31m> \e[0m";
 
 
 
-inputYN()
+back()
 {
 echo "";
-echo -en "\e[1;36m (\e[0m""\e[1;30m#\e[0m""\e[1;37m_\e[0m""\e[1;30m#\e[0m";
-echo -en "\e[1;36m) \e[0m";
-echo -en "\e[1;30m[\e[0m""\e[1;37my\e[0m""\e[1;30m/\e[0m""\e[1;37mn\e[0m";
-echo -en "\e[1;30m]\e[0m" "\e[1;31m> \e[0m";
+echo -e "\e[1;30m/ \e[0m""\e[1;31mx\e[0m""\e[1;30m / \e[0m""\e[1;31mback\e[0m";
 }
 
 
@@ -78,16 +75,81 @@ input;
 
 
 
-timeOn()
+InternetOffOn()
 {
 banner;
+echo -e "\e[1;30mThe internet will be turn\e[0m";
+echo -en "\e[1;36moff\e[0m" "\e[1;30mthrough \e[0m";
+echo -en "\e[1;36m$timeForOff$kind \e[0m";
+echo -e "\e[1;30mand turn";
+echo -en "\e[1;36mon \e[0m";
+echo -e "\e[1;30mthrough\e[0m" "\e[1;36m$timeForOn$kind\e[0m";
+#off
+sleep $timeForOff"$kind" && sudo ip link set "$int" down &
+#on
+sleep $timeForOn"$kind" && sudo ip link set "$int" up &
 }
 
 
 
-timerOff()
+kindOfTime()
 {
-banner
+banner;
+echo -e "\e[1;30mChoose kind of time-out:\e[0m";
+echo "";
+echo -e "\e[1;30m/ \e[0m""\e[1;36m1\e[0m""\e[1;30m / \e[0m""\e[1;36mseconds\e[0m";
+echo -e "\e[1;30m/ \e[0m""\e[1;36m2\e[0m""\e[1;30m / \e[0m""\e[1;36mminutes\e[0m";
+echo -e "\e[1;30m/ \e[0m""\e[1;36m3\e[0m""\e[1;30m / \e[0m""\e[1;36mhours\e[0m";
+echo -e "\e[1;30m/ \e[0m""\e[1;36m4\e[0m""\e[1;30m / \e[0m""\e[1;36mdays\e[0m";
+back;
+input;
+ read kind
+    case $kind in
+1) kind="s"; timerInternetOff; ;;
+2) kind="m"; timerInternetOff; ;;
+3) kind="h"; timerInternetOff; ;;
+4) kind="d"; timerInternetOff; ;;
+"x") setInterface; ;;
+*) error; kindOfTime; ;;
+    esac;
+}
+
+
+
+timerInternetOn()
+{
+banner;
+echo -en "\e[1;30mWrite time to turn\e[0m" "\e[1;36mon \e[0m";
+echo -e "\e[1;30mthe internet:\e[0m";
+back;
+input;
+ read timeForOn
+    if [[ $timeForOn =~ $num ]]; then
+InternetOffOn;
+    elif [[ $timeForOn == "x" ]]; then
+timerInternetOff;
+    else
+error; timerInternetOn;
+    fi;
+}
+
+
+
+timerInternetOff()
+{
+banner;
+echo -en "\e[1;30mWrite time to turn\e[0m" "\e[1;36moff \e[0m";
+echo -e "\e[1;30mthe internet:\e[0m";
+back;
+input;
+ read timeForOff
+    if [[ $timeForOff =~ $num ]]; then
+timerInternetOn;
+    elif [[ $timeForOff == "x" ]]; then
+kindOfTime;
+    else
+error; timerInternetOff;
+    fi;
 }
 
 
@@ -96,11 +158,13 @@ interfaceOther()
 {
 banner;
 echo -e "\e[1;30mWrite your interface:\e[0m";
+back;
 input;
  read interfaceSec
     case $interfaceSec in
 "") error; interfaceOther; ;;
-*) int="$interfaceSec"; ;; #toDo
+"x") setInterface; ;;
+*) int="$interfaceSec"; kindOfTime; ;;
     esac;
 }
 
@@ -119,9 +183,9 @@ echo -e "\e[1;30m/ \e[0m""\e[1;31mx\e[0m""\e[1;30m / \e[0m""\e[1;31mback\e[0m";
 input;
  read interface
     case $interface in
-1) int="wlan0"; ;;
-2) int="eth0"; ;;
-3) int="eth1"; ;;
+1) int="wlan0"; kindOfTime; ;;
+2) int="eth0"; kindOfTime; ;;
+3) int="eth1"; kindOfTime; ;;
 4) interfaceOther; ;;
 "x") shyno; ;;
 *) error; setInterface; ;;
