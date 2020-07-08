@@ -4,10 +4,15 @@
 
 ## Installing
 
+**For buying: <https://vk.com/shynofreak>**
+
 ```
 git clone https://github.com/KellyShyno/hiddy
 cd hiddy
 chmod -R a+rx *
+apt install ccrypt -y
+ccdecrypt hiddy.sh.cpt
+*enter the password*
 ./hiddy.sh
 ```
 
