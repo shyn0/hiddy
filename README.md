@@ -1,6 +1,6 @@
 # hiddy
 
-> **hiddy - is the program to turn off and on the internet by a time-out**
+> **hiddy - is the program to turn off and turn on the internet by a time-out**
 
 ## Installing
 
