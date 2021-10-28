@@ -5,7 +5,7 @@
 ## Installing
 
 ```
-git clone https://github.com/KellyShyno/hiddy
+git clone https://github.com/shyn0/hiddy
 cd hiddy
 chmod -R a+rx *
 ./hiddy.sh
@@ -13,8 +13,6 @@ chmod -R a+rx *
 
 ## About us
 
-> **vk**: <https://vk.com/linuxkelly>
-
-> **YouTube**: <https://www.youtube.com/channel/UC0FAZ36boaHKZgzbD3rMa_A>
+> **vk**: <https://vk.com/shynolinux>
 
 **break a leg (#_#)**
